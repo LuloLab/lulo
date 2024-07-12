@@ -55,7 +55,7 @@ public static bool GLOBAL_INTERACTIVE = true;
 #region Enter
 private void Start()
 {
-    levelResources = Resources.Load<TextAsset>($"levels").text.Split(System.Environment.NewLine);
+    levelResources = Resources.Load<TextAsset>($"levels").text.Split("\r\n");
     A = GetComponent<AudioController>();
     A.soundOn = PlayerPrefs.GetInt("soundOn", 1) == 1;
     GameObject.Find("Canvas/sound").GetComponent<UnityEngine.UI.Image>().sprite = A.soundOn ? soundOn : soundOff;
@@ -146,13 +146,14 @@ public void NewGame(int level)
             quadColor = quadColorExp * quadColors[colorScr.Get()];
 
             bool hasTarget = s.Length >= 5;
-            char quadShape = @"-|\/".Contains(s[^1]) ? s[^1] : '.';
+            char quadShape = s.Length > 5 ? s[5] : '.';
             var g = Instantiate(quadShape switch
             {
-                '.' => singleQuad,
+                '/' => diagQuad,
+                '\\'=> diagQuad,
                 '-' => doubleQuad,
                 '|' => doubleQuad,
-                _   => diagQuad,
+                _   => singleQuad,
             }, box);
             g.name = patternNames[decalIdx];
 
