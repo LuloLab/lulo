@@ -146,7 +146,7 @@ public void NewGame(int level)
             quadColor = quadColorExp * quadColors[colorScr.Get()];
 
             bool hasTarget = s.Length >= 5;
-            char quadShape = s.Length == 5 ? '.' : s[5];
+            char quadShape = s.Length > 5 ? s[5] : '.';
             var g = Instantiate(quadShape switch
             {
                 '.' => singleQuad,
