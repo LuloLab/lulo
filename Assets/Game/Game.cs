@@ -41,7 +41,7 @@ private int level, xx, yy, modelIdx;
 private bool isLShape;
 
 // Game Variables
-private int nMove, nQuadOut, nextPosCache;
+private int nQuadOut, nextPosCache;
 private int[] groundObjs, surfaceObjs, targetObjs;
 private readonly List<GameObject> entries = new();
 private readonly List<Quad> quads = new();
@@ -118,7 +118,7 @@ public void NewGame(int level)
             modelIdx = int.Parse(s.Substring(1));
             box = Instantiate(Resources.Load<GameObject>($"box{modelIdx}")).transform;
             box.localPosition = 0.2f * Vector3.up;
-            Vector4 boxRange = new Vector4(xx - 2, yy - 2);
+            Vector4 boxRange = new(xx - 2, yy - 2);
             if (isLShape){
                 ++boxRange.x;
                 ++boxRange.y;
@@ -162,8 +162,6 @@ public void NewGame(int level)
             quad.pattern = thePattern;
             quad.hasTarget = hasTarget;
             quad.iron = s[0] == 'Q';
-            if (quad.iron && quadShape != '.')
-                Debug.LogError("Invalid iron quad");
             if (quad.iron)
                 g.GetComponent<MeshRenderer>().material = quadIronMat;
             quad.atHome = true;
@@ -173,23 +171,23 @@ public void NewGame(int level)
             quad.subquads = quadShape switch
             {
                 '.' => new Quad.SubQuad[1] {
-                    new Quad.SubQuad { pos = quad.initFirstPos }
+                    new() { pos = quad.initFirstPos }
                 },
                 '-' => new Quad.SubQuad[2] {
-                    new Quad.SubQuad { pos = quad.initFirstPos },
-                    new Quad.SubQuad { pos = quad.initFirstPos + 1 }
+                    new() { pos = quad.initFirstPos },
+                    new() { pos = quad.initFirstPos + 1 }
                 },
                 '|' => new Quad.SubQuad[2] {
-                    new Quad.SubQuad { pos = quad.initFirstPos },
-                    new Quad.SubQuad { pos = quad.initFirstPos + xx }
+                    new() { pos = quad.initFirstPos },
+                    new() { pos = quad.initFirstPos + xx }
                 },
                 '\\' => new Quad.SubQuad[2] {
-                    new Quad.SubQuad { pos = quad.initFirstPos },
-                    new Quad.SubQuad { pos = quad.initFirstPos - xx + 1 }
+                    new() { pos = quad.initFirstPos },
+                    new() { pos = quad.initFirstPos - xx + 1 }
                 },
                 _ => new Quad.SubQuad[2] {
-                    new Quad.SubQuad { pos = quad.initFirstPos },
-                    new Quad.SubQuad { pos = quad.initFirstPos + xx + 1 }
+                    new() { pos = quad.initFirstPos },
+                    new() { pos = quad.initFirstPos + xx + 1 }
                 },
             };
             quad.transform.rotation = quad.InitRotation;
@@ -542,7 +540,8 @@ public void Restart()
 }
 public void Undo()
 {
-    if (nMove == 0) return;
+    if (history.Count == 0)
+        return;
 
     List<Quad> quadTogo = new();
     int j = history.Pop();
