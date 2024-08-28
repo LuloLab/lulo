@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Game : MonoBehaviour {
 
-public GameObject singleQuad, doubleQuad, diagQuad, pfEntry;
+public GameObject singleQuad, doubleQuad, diagQuad, pfEntry, pfConfetti;
 public Material boxMat, quadWoodMat, quadIronMat, quadBlackMat, quadSpriteMat;
 public PhysicMaterial quadPhyMat;
 public Sprite soundOn, soundOff;
@@ -463,6 +463,8 @@ public void GameWin()
     entries[level].GetComponent<UnityEngine.UI.Image>().color = Color.green;
     PlayerPrefs.SetInt("data", PlayerPrefs.GetInt("data") | 1 << (level - 1));
     PlayerPrefs.Save();
+    Instantiate(pfConfetti, entryDash);
+    (pfConfetti.transform as RectTransform).anchoredPosition = Vector2.zero;
 }
 public void QuitLevel()
 {
